@@ -1,6 +1,6 @@
 # Marky - AI Powered Note Highlighter
 
-![Marky Demo](/Users/hercules/.gemini/antigravity/brain/739cff9a-bac1-4e85-b132-56f83dc49039/uploaded_media_1769920252124.png)
+[Marky Demo Video](https://youtu.be/ws5HI290-7M)
 
 ## � Table of Contents
 - [Problem Statement](#-problem-statement)
