@@ -28,6 +28,6 @@ services:
         fromService:
           type: web
           name: marky-backend
-          property: hostport
+          property: url
       - key: NODE_ENV
         value: production
