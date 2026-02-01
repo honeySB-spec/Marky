@@ -141,8 +141,33 @@ export default function App() {
             </main>
 
             {/* Footer Logo */}
-            <div className="fixed bottom-8 left-8">
+            <div className="fixed bottom-8 left-8 flex flex-col gap-4">
                 <div className="bg-primary text-primary-foreground rounded-full w-10 h-10 flex items-center justify-center font-bold">N</div>
+
+                <Button
+                    variant="outline"
+                    size="sm"
+                    className="text-xs opacity-50 hover:opacity-100"
+                    onClick={async () => {
+                        toast.info("Testing connection...");
+                        try {
+                            const res = await fetch('/api/debug');
+                            const data = await res.json();
+                            if (data.success) {
+                                toast.success(`Connected! Latency: ${data.duration}`);
+                                alert(JSON.stringify(data, null, 2));
+                            } else {
+                                toast.error(`Connection Failed: ${data.status || 500}`);
+                                alert(JSON.stringify(data, null, 2));
+                            }
+                        } catch (e) {
+                            toast.error("Failed to run debug");
+                            alert(String(e));
+                        }
+                    }}
+                >
+                    Debug Connection
+                </Button>
             </div>
         </div>
     );
