@@ -60,7 +60,7 @@ def get_important_sentences(full_text):
     try:
         # Use a model that definitely exists
         response = client.models.generate_content(
-            model='gemini-1.5-flash',
+            model='gemini-2.5-flash',
             contents=prompt
         )
         
