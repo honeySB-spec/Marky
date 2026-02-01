@@ -1,6 +1,6 @@
 # Marky - AI Powered Note Highlighter
 
-[Marky Demo Video](https://youtu.be/ws5HI290-7M)
+[Marky Demo Video](https://youtu.be/rk2S2A_PaAs)
 
 ## � Table of Contents
 - [Problem Statement](#-problem-statement)
