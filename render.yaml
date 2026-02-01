@@ -2,16 +2,14 @@ services:
   # Backend Service (Python/FastAPI)
   - type: web
     name: marky-backend
-    runtime: python
-    rootDir: backend
-    buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    runtime: docker
+    rootDir: . # The context should be the root if we want, but usually for monorepos it's tricky. Let's look at the plan. Plan said `dockerContext: backend` and `dockerfilePath: backend/Dockerfile`.
+    dockerContext: backend
+    dockerfilePath: backend/Dockerfile
     plan: free
     envVars:
       - key: GEMINI_API_KEY
         sync: false
-      - key: PYTHON_VERSION
-        value: 3.11.0
     autoDeploy: true
 
   # Frontend Service (Next.js)
