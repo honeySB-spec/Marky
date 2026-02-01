@@ -16,10 +16,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
 # Configure Gemini
-# Make sure to set this environment variable or paste your key here for testing
-# os.environ["GEMINI_API_KEY"] = "YOUR_ACTUAL_API_KEY_HERE" 
-genai.configure(api_key="AIzaSyDWsnB-VtkeMLaBhn467CbkfnKJ5X80FKs") 
+api_key = os.getenv("GEMINI_API_KEY")
+if not api_key:
+    print("Error: GEMINI_API_KEY not found in environment variables")
+    
+genai.configure(api_key=api_key) 
 
 def get_important_sentences(full_text):
     """Sends text to Gemini and asks for the most important distinct sentences."""
