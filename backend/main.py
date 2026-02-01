@@ -3,7 +3,8 @@ import fitz  # PyMuPDF
 from fastapi import FastAPI, UploadFile, File
 from fastapi.responses import Response
 from fastapi.middleware.cors import CORSMiddleware
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 import os
 
 app = FastAPI()
@@ -21,18 +22,15 @@ import os
 
 load_dotenv()
 
-# Configure Gemini
+# Configure Gemini Client
 api_key = os.getenv("GEMINI_API_KEY")
 if not api_key:
     print("Error: GEMINI_API_KEY not found in environment variables")
     
-genai.configure(api_key=api_key) 
+client = genai.Client(api_key=api_key)
 
 def get_important_sentences(full_text):
     """Sends text to Gemini and asks for the most important distinct sentences."""
-    
-    # We use gemini-1.5-flash because it's fast and cheap/free
-    model = genai.GenerativeModel('gemini-3-flash-preview')
     
     prompt = f"""
     Read the following text. Identify the 5-10 most important sentences or key concepts that a student should highlight for revision.
@@ -44,8 +42,15 @@ def get_important_sentences(full_text):
     # Gemini 1.5 Flash has a huge context window, so we can send more text (30k chars) safely.
 
     try:
-        response = model.generate_content(prompt)
-        # Gemini returns the result in response.text
+        response = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=prompt
+        )
+        
+        # The new SDK returns a GenerateContentResponse object. 
+        # Accessing .text is similar, but let's be safe.
+        if not response.text:
+             return []
         return response.text.strip().split('\n')
     except Exception as e:
         print(f"Gemini API Error: {e}")
@@ -61,6 +66,10 @@ async def highlight_pdf(file: UploadFile = File(...)):
     full_text = ""
     for page in doc:
         full_text += page.get_text()
+
+    if not full_text.strip():
+        print("Warning: No text found in PDF. It might be a scanned image.")
+        return Response(content=pdf_data, media_type="application/pdf")
 
     # 3. Get important phrases from AI
     print("Sending text to Gemini...")

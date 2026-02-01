@@ -17,9 +17,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={`${inter.className} antialiased`}>
         {children}
-        <Toaster /> {/* <--- Add this component here */}
+        <Toaster />
       </body>
     </html>
   );
