@@ -12,7 +12,7 @@ services:
         sync: false
       - key: PYTHON_VERSION
         value: 3.11.0
-    autoDeploy: false
+    autoDeploy: true
 
   # Frontend Service (Next.js)
   - type: web
@@ -22,6 +22,7 @@ services:
     buildCommand: npm install && npm run build
     startCommand: npm run start
     plan: free
+    autoDeploy: true
     envVars:
       - key: BACKEND_URL
         fromService:
