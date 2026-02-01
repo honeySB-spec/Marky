@@ -37,7 +37,14 @@ export default function App() {
             });
 
             if (!response.ok) {
-                throw new Error("Analysis failed");
+                let errorMessage = "Analysis failed";
+                try {
+                    const errorData = await response.json();
+                    errorMessage = errorData.details || errorData.error || `Server Error: ${response.status}`;
+                } catch (e) {
+                    errorMessage = `Analysis failed: ${response.status} ${response.statusText}`;
+                }
+                throw new Error(errorMessage);
             }
 
             // Get the blob from response
@@ -50,7 +57,7 @@ export default function App() {
             toast.success("Analysis complete!");
         } catch (error) {
             console.error("Error analyzing PDF:", error);
-            toast.error("Failed to analyze PDF. Please try again.");
+            toast.error(error instanceof Error ? error.message : "Failed to analyze PDF");
         } finally {
             setLoading(false);
         }
