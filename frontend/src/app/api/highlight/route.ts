@@ -10,6 +10,8 @@ export async function POST(req: NextRequest) {
         backendUrl = `http://${backendUrl}`;
     }
 
+    console.log(`[Proxy] Forwarding request to backend: ${backendUrl}/highlight-pdf`);
+
     try {
         const formData = await req.formData();
 
@@ -20,9 +22,11 @@ export async function POST(req: NextRequest) {
         });
 
         if (!response.ok) {
-            console.error("Backend error:", response.status, response.statusText);
+            const errorText = await response.text();
+            console.error(`[Proxy] Backend returned error: ${response.status} ${response.statusText}`);
+            console.error(`[Proxy] Backend response body: ${errorText}`);
             return NextResponse.json(
-                { error: 'Backend processing failed' },
+                { error: `Backend processing failed: ${response.status}`, details: errorText },
                 { status: response.status }
             );
         }
@@ -39,9 +43,9 @@ export async function POST(req: NextRequest) {
         });
 
     } catch (error) {
-        console.error('Proxy error:', error);
+        console.error('[Proxy] Critical error:', error);
         return NextResponse.json(
-            { error: 'Internal server error processing PDF' },
+            { error: 'Internal server error processing PDF', details: String(error) },
             { status: 500 }
         );
     }
